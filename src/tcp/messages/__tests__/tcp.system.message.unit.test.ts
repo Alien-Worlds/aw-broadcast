@@ -5,7 +5,7 @@ import { BroadcastTcpMessage } from '../tcp.message';
 
 jest.mock('nanoid', () => ({
   __esModule: true,
-  default: () => 'mockedId',
+  nanoid: () => 'mockedId',
 }));
 
 describe('BroadcastTcpSystemMessage', () => {

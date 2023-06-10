@@ -43,60 +43,95 @@ export class BroadcastTcpClient implements BroadcastClient {
     this.socket = new Socket();
 
     this.messageQueue = new BroadcastTcpMessageQueue(this.socket);
-    this.socket.on('connect', () => {
-      this.connectionState = ConnectionState.Online;
-      const address = getClientAddress(this.socket, true);
-      this.address = address;
+    this.socket.on('connect', () => this.onSocketConnect());
+    this.socket.on('end', () => this.onSocketEnd());
+    this.socket.on('error', error => this.onSocketError(error));
+    this.socket.on('data', buffer => this.onSocketData(buffer));
+  }
 
-      log(`Broadcast - ${JSON.stringify({ name, address })}: connected to the server.`);
+  /**
+   * Handles the received data from the socket.
+   *
+   * @private
+   * @param {Buffer} buffer - The received data buffer.
+   */
+  private onSocketData(buffer) {
+    const buffers = splitToMessageBuffers(buffer);
 
-      const message = BroadcastTcpSystemMessage.createClientConnected(
-        name,
-        this.address,
-        Array.from(this.channelHandlers.keys())
-      );
+    for (const buffer of buffers) {
+      const message = BroadcastTcpMessage.fromBuffer(buffer);
+      const { type, channel, data, name } = message;
 
-      this.messageQueue.add(message);
-      this.messageQueue.start();
-    });
-    this.socket.on('end', () => {
-      const { clientName: name, address } = this;
-      this.connectionState = ConnectionState.Offline;
-      log(
-        `Broadcast - ${JSON.stringify({ name, address })}: disconnected from the server.`
-      );
-      this.messageQueue.stop();
-      this.reconnect();
-    });
-    this.socket.on('error', error => {
-      const { clientName: name, address } = this;
-      this.connectionState = ConnectionState.Offline;
-      log(`Broadcast - ${JSON.stringify({ name, address })}: Error: ${error.message}`);
-      this.messageQueue.stop();
-      this.reconnect();
-    });
-    this.socket.on('data', buffer => {
-      const buffers = splitToMessageBuffers(buffer);
-
-      for (const buffer of buffers) {
-        const message = BroadcastTcpMessage.fromBuffer(buffer);
-        const { type, channel, data, name } = message;
-
-        if (type === BroadcastTcpMessageType.System) {
-          this.onSystemMessage(<BroadcastTcpSystemMessage>message);
-        } else {
-          const handler = this.channelHandlers.get(channel);
-          if (handler) {
-            const broadcastMessage = BroadcastMessage.createChannelMessage(
-              channel,
-              data,
-              name
-            );
-            handler(broadcastMessage);
-          }
+      if (type === BroadcastTcpMessageType.System) {
+        this.onSystemMessage(<BroadcastTcpSystemMessage>message);
+      } else {
+        const handler = this.channelHandlers.get(channel);
+        if (handler) {
+          const broadcastMessage = BroadcastMessage.createChannelMessage(
+            channel,
+            data,
+            name
+          );
+          handler(broadcastMessage);
         }
       }
-    });
+    }
+  }
+
+  /**
+   * Handles the socket connection event.
+   *
+   * @private
+   */
+  private onSocketConnect() {
+    this.connectionState = ConnectionState.Online;
+    const address = getClientAddress(this.socket, true);
+    this.address = address;
+
+    log(
+      `Broadcast - ${JSON.stringify({
+        name: this.clientName,
+        address,
+      })}: connected to the server.`
+    );
+
+    const message = BroadcastTcpSystemMessage.createClientConnected(
+      this.clientName,
+      this.address,
+      Array.from(this.channelHandlers.keys())
+    );
+
+    this.messageQueue.add(message);
+    this.messageQueue.start();
+  }
+
+  /**
+   * Handles the socket error event.
+   *
+   * @private
+   * @param {Error} error - The error object.
+   */
+  private onSocketError(error) {
+    const { clientName: name, address } = this;
+    this.connectionState = ConnectionState.Offline;
+    log(`Broadcast - ${JSON.stringify({ name, address })}: Error: ${error.message}`);
+    this.messageQueue.stop();
+    this.reconnect();
+  }
+
+  /**
+   * Handles the socket end event.
+   *
+   * @private
+   */
+  private onSocketEnd() {
+    const { clientName: name, address } = this;
+    this.connectionState = ConnectionState.Offline;
+    log(
+      `Broadcast - ${JSON.stringify({ name, address })}: disconnected from the server.`
+    );
+    this.messageQueue.stop();
+    this.reconnect();
   }
 
   /**

@@ -19,8 +19,17 @@ export class BroadcastTcpMessage<DataType = unknown> {
     buffer: Buffer
   ): BroadcastTcpMessage<DataType> {
     const content = deserialize(buffer) as BroadcastTcpMessageContent<DataType>;
-    const { id, sender, channel, type, name, recipient, data } = content;
-    return new BroadcastTcpMessage(id, sender, channel, type, name, recipient, data);
+    const { id, sender, channel, type, name, recipient, data, persistent } = content;
+    return new BroadcastTcpMessage(
+      id,
+      sender,
+      channel,
+      type,
+      name,
+      recipient,
+      data,
+      typeof persistent === 'boolean' ? persistent : true
+    );
   }
 
   /**
@@ -33,7 +42,7 @@ export class BroadcastTcpMessage<DataType = unknown> {
   public static create<DataType = unknown>(
     content: BroadcastTcpMessageContent<DataType>
   ): BroadcastTcpMessage<DataType> {
-    const { id, sender, channel, type, name, recipient, data } = content;
+    const { id, sender, channel, type, name, recipient, data, persistent } = content;
     return new BroadcastTcpMessage(
       id || nanoid(),
       sender,
@@ -41,7 +50,8 @@ export class BroadcastTcpMessage<DataType = unknown> {
       type,
       name,
       recipient,
-      data
+      data,
+      typeof persistent === 'boolean' ? persistent : true
     );
   }
 

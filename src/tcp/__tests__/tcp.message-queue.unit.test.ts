@@ -4,13 +4,16 @@ import { BroadcastTcpMessage } from '../messages/tcp.message';
 import { BroadcastTcpMessageQueue } from '../tcp.message-queue';
 
 describe('BroadcastTcpMessageQueue', () => {
-  let socket: Socket;
+  let socket: Socket = {
+    remoteAddress: '0.0.0.0',
+    remotePort: 1111,
+    localAddress: '0.0.0.0',
+    localPort: 1111,
+    write: jest.fn(),
+  } as any;
   let messageQueue: BroadcastTcpMessageQueue;
 
   beforeEach(() => {
-    // Mock the Socket object
-    socket = new Socket() as jest.Mocked<Socket>;
-    // Initialize the BroadcastTcpMessageQueue with the mocked socket
     messageQueue = new BroadcastTcpMessageQueue(socket);
   });
 

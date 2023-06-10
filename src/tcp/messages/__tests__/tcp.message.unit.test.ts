@@ -11,7 +11,7 @@ jest.mock('v8', () => ({
 
 jest.mock('nanoid', () => ({
   __esModule: true,
-  default: () => 'mockedId',
+  nanoid: () => 'mockedId',
 }));
 
 describe('BroadcastTcpMessage', () => {

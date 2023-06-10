@@ -6,4 +6,5 @@ export type BroadcastTcpMessageContent<DataType = unknown> = {
   id?: string;
   recipient?: string;
   data?: DataType;
+  persistent?: boolean;
 };

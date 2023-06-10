@@ -120,7 +120,6 @@ export class BroadcastTcpServer implements BroadcastServer {
       const { channel } = data;
       const address = getClientAddress(socket, false);
       const client = this.clients.find(client => client.address === address);
-
       if (client) {
         log(
           `Broadcast TCP Server: client ${client.address} (${client.name}) is listening to channel "${channel}".`
@@ -178,8 +177,8 @@ export class BroadcastTcpServer implements BroadcastServer {
       const address = getClientAddress(socket, false);
       const i = this.clients.findIndex(client => client.address === address);
 
-      if (i) {
-        this.clients.splice(i);
+      if (i > -1) {
+        this.clients.splice(i, 1);
       }
 
       this.channelsByName.forEach(channel => {
@@ -200,9 +199,9 @@ export class BroadcastTcpServer implements BroadcastServer {
    * @returns {BroadcastTcpClientCast} - The client object, if found.
    */
   protected findClient(nameOrAddress: string): BroadcastTcpClientCast {
-    return this.clients.find(
-      client => client.name === nameOrAddress || client.address === nameOrAddress
-    );
+    return this.clients.find(client => {
+      return client.name === nameOrAddress || client.address === nameOrAddress;
+    });
   }
   /**
    * Event listener for when a client sends a message.
@@ -223,7 +222,6 @@ export class BroadcastTcpServer implements BroadcastServer {
       }
 
       const broadcastMessage = BroadcastMessage.create(recipient, channel, data, name);
-
       if (this.clientMessageHandler && sender) {
         this.clientMessageHandler(sender, broadcastMessage);
       }
@@ -283,6 +281,7 @@ export class BroadcastTcpServer implements BroadcastServer {
     try {
       const message = BroadcastTcpMessage.fromBuffer(buffer);
       const { type, data, name } = message;
+
       if (
         type === BroadcastTcpMessageType.System &&
         name === BroadcastTcpMessageName.ClientConnected
@@ -313,7 +312,9 @@ export class BroadcastTcpServer implements BroadcastServer {
    */
   public async start(): Promise<void> {
     try {
-      this.server = createServer();
+      if (!this.server) {
+        this.server = createServer();
+      }
 
       this.server.on('connection', socket => {
         socket.on('data', buffer => {
@@ -355,7 +356,6 @@ export class BroadcastTcpServer implements BroadcastServer {
     if (channel) {
       this.sendMessageToChannel(id, name, channel, content);
     }
-
     const recipient = this.clients.find(
       ({ address, name }) => client === address || client === name
     );
@@ -384,6 +384,7 @@ export class BroadcastTcpServer implements BroadcastServer {
         BroadcastTcpMessage;
         this.channelsByName.get(channel).sendMessage(
           BroadcastTcpMessage.create({
+            id,
             sender: 'server',
             channel,
             data,
@@ -419,6 +420,7 @@ export class BroadcastTcpServer implements BroadcastServer {
     try {
       client.send(
         BroadcastTcpMessage.create({
+          id,
           sender: 'server',
           channel: null,
           data,
