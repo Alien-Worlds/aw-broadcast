@@ -6,6 +6,23 @@ TCP (Transmission Control Protocol) is a communication protocol that ensures rel
 
 This package is especially useful for building distributed systems, where different processes or services need to communicate with each other in a seamless and efficient way.
 
+## Dependencies
+
+- [@alien-worlds/api-core](https://github.com/Alien-Worlds/api-core)
+- [nanoid](https://github.com/ai/nanoid)
+- [node-fetch](https://github.com/node-fetch/node-fetch)
+
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Server](#server)
+- [Client](#client)
+- [BroadcastMessage](#broadcastMessage)
+- [Contributing](#contributing)
+- [License](#license)
+
+
 ## Installation
 
 To add Broadcast to your project, use the following command with your favorite package manager:
@@ -113,9 +130,10 @@ it effectively. Enjoy seamless inter-process communication with Broadcast!
 
 ## Contributing
 
-We encourage contributions from the community. If you have suggestions or features you'd like to see in the Broadcast package, please open an issue. For pull requests, ensure your changes are well documented and include tests where possible.
+We welcome contributions from the community. Before contributing, please read through the existing issues on this repository to prevent duplicate submissions. New feature requests and bug reports can be submitted as an issue. If you would like to contribute code, please open a pull request.
 
 ## License
 
-Broadcast is [MIT licensed](./LICENSE).
+This project is licensed under the terms of the MIT license. For more information, refer to the [LICENSE](./LICENSE) file.
+
 
