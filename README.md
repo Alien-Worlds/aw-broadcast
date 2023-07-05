@@ -10,7 +10,6 @@ This package is especially useful for building distributed systems, where differ
 
 - [@alien-worlds/api-core](https://github.com/Alien-Worlds/api-core)
 - [nanoid](https://github.com/ai/nanoid)
-- [node-fetch](https://github.com/node-fetch/node-fetch)
 
 
 ## Table of Contents
