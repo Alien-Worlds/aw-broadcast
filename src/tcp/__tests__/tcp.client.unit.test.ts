@@ -1,4 +1,4 @@
-import { wait } from '@alien-worlds/api-core';
+import { wait } from '@alien-worlds/aw-core';
 import { BroadcastTcpClient } from '../tcp.client';
 import { Socket } from 'net';
 import { ConnectionState } from '../../enums';
@@ -22,7 +22,7 @@ jest.mock('net');
 jest.mock('../tcp.utils');
 jest.mock('../tcp.message-queue');
 
-jest.mock('@alien-worlds/api-core', () => ({
+jest.mock('@alien-worlds/aw-core', () => ({
   wait: jest.fn(),
   log: jest.fn(),
 }));

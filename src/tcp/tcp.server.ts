@@ -8,7 +8,7 @@ import {
 } from './tcp.utils';
 import { BroadcastTcpClientCast } from './tcp.client-cast';
 import { BroadcastTcpChannel } from './tcp.channel';
-import { log } from '@alien-worlds/api-core';
+import { log } from '@alien-worlds/aw-core';
 import { BroadcastServer, ClientMessageHandler } from '../broadcast.server';
 import { BroadcastMessage } from '../broadcast.message';
 import { BroadcastClientConnectedData, BroadcastMessageHandlerData } from './tcp.types';

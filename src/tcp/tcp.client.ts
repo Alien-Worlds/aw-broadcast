@@ -8,7 +8,7 @@ import {
   splitToMessageBuffers,
 } from './tcp.utils';
 import { nanoid } from 'nanoid';
-import { log, wait } from '@alien-worlds/api-core';
+import { log, wait } from '@alien-worlds/aw-core';
 import { BroadcastClient, MessageHandler } from '../broadcast.client';
 import { BroadcastMessage } from '../broadcast.message';
 import { BroadcastTcpSystemMessage } from './messages/tcp.system.message';

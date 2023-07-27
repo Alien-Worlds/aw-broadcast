@@ -3,7 +3,7 @@ import { BroadcastTcpClientCast } from '../tcp.client-cast';
 import { BroadcastTcpStash } from '../tcp.stash';
 import { Server, Socket, createServer } from 'net';
 import { BroadcastTcpMessage } from '../messages/tcp.message';
-import { log } from '@alien-worlds/api-core';
+import { log } from '@alien-worlds/aw-core';
 import { BroadcastTcpChannel } from '../tcp.channel';
 import {
   getClientAddress,
@@ -22,7 +22,7 @@ import { ClientMessageHandler } from '../../broadcast.server';
 jest.mock('../tcp.utils');
 jest.mock('../tcp.client-cast');
 jest.mock('../tcp.stash');
-jest.mock('@alien-worlds/api-core', () => ({
+jest.mock('@alien-worlds/aw-core', () => ({
   log: jest.fn(),
 }));
 

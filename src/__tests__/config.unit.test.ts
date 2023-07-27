@@ -1,8 +1,8 @@
-import { ConfigVars } from '@alien-worlds/api-core';
+import { ConfigVars } from '@alien-worlds/aw-core';
 import { buildBroadcastConfig } from '../config';
 
 // Mock the ConfigVars class
-jest.mock('@alien-worlds/api-core', () => {
+jest.mock('@alien-worlds/aw-core', () => {
   return {
     ConfigVars: jest.fn().mockImplementation(() => {
       return {

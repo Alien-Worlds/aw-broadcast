@@ -8,7 +8,7 @@ This package is especially useful for building distributed systems, where differ
 
 ## Dependencies
 
-- [@alien-worlds/api-core](https://github.com/Alien-Worlds/api-core)
+- [@alien-worlds/aw-core](https://github.com/Alien-Worlds/api-core)
 - [nanoid](https://github.com/ai/nanoid)
 
 
@@ -27,7 +27,7 @@ This package is especially useful for building distributed systems, where differ
 To add Broadcast to your project, use the following command with your favorite package manager:
 
 ```bash
-yarn add @alien-worlds/broadcast
+yarn add @alien-worlds/aw-broadcast
 ```
 
 ## Server
